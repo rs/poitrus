@@ -12,7 +12,7 @@ import (
 
 func main() {
 	listen := flag.String("listen", ":8080", "Address to listen on")
-	origin := flag.String("overlay", "50.112.122.158", "IP of the service to overlay")
+	origin := flag.String("overlay", "75.2.85.205", "IP of the service to overlay")
 	root := flag.String("root", "/tmp/poitrus", "Path to the root directory")
 	flag.Parse()
 
