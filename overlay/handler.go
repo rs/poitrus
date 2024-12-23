@@ -11,7 +11,6 @@ import (
 func Handler(h http.Handler, origin string) http.Handler {
 	proxy := &httputil.ReverseProxy{
 		Director: func(r *http.Request) {
-			r.URL.Scheme = "http"
 			r.URL.Host = origin
 		},
 		ModifyResponse: func(r *http.Response) error {
