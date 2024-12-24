@@ -12,10 +12,9 @@ import (
 
 func Handler(h http.Handler, origin string) http.Handler {
 	proxy := &httputil.ReverseProxy{
-		Rewrite: func(r *httputil.ProxyRequest) {
-			r.Out.URL.Scheme = "https"
-			r.Out.URL.Host = origin
-			log.Printf("Proxying to %s", r.Out.URL.String())
+		Director: func(r *http.Request) {
+			r.URL.Scheme = "https"
+			r.URL.Host = origin
 		},
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
