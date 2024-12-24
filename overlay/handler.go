@@ -11,10 +11,9 @@ import (
 
 func Handler(h http.Handler, origin string) http.Handler {
 	proxy := &httputil.ReverseProxy{
-		Director: func(r *http.Request) {
-			r.URL.Host = origin
-			log.Printf("GET overlay %s", r.URL)
-
+		Rewrite: func(r *httputil.ProxyRequest) {
+			r.Out.URL.Host = origin
+			log.Printf("Proxying to %s", r.Out.URL.String())
 		},
 		ModifyResponse: func(r *http.Response) error {
 			if r.StatusCode == 404 {
@@ -24,6 +23,7 @@ func Handler(h http.Handler, origin string) http.Handler {
 			}
 			return nil
 		},
+		ErrorLog: log.Default(),
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
