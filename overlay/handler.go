@@ -34,6 +34,7 @@ func Handler(h http.Handler, origin string) http.Handler {
 		wr := httptest.NewRecorder()
 		wr.Body = &bytes.Buffer{}
 		h.ServeHTTP(wr, r)
+		log.Printf("GET %s: status %d", r.URL.Path, wr.Code)
 		if wr.Code == 404 {
 			proxy.ServeHTTP(w, r)
 			return
