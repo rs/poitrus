@@ -3,6 +3,7 @@ package overlay
 import (
 	"bytes"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/http/httputil"
@@ -12,6 +13,8 @@ func Handler(h http.Handler, origin string) http.Handler {
 	proxy := &httputil.ReverseProxy{
 		Director: func(r *http.Request) {
 			r.URL.Host = origin
+			log.Printf("GET overlay %s", r.URL)
+
 		},
 		ModifyResponse: func(r *http.Response) error {
 			if r.StatusCode == 404 {
@@ -40,6 +43,5 @@ func Handler(h http.Handler, origin string) http.Handler {
 		}
 		w.WriteHeader(wr.Code)
 		_, _ = w.Write(wr.Body.Bytes())
-		return
 	})
 }
