@@ -2,6 +2,7 @@ package overlay
 
 import (
 	"bytes"
+	"crypto/tls"
 	"io"
 	"log"
 	"net/http"
@@ -15,6 +16,9 @@ func Handler(h http.Handler, origin string) http.Handler {
 			r.Out.URL.Scheme = "https"
 			r.Out.URL.Host = origin
 			log.Printf("Proxying to %s", r.Out.URL.String())
+		},
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		},
 		ModifyResponse: func(r *http.Response) error {
 			if r.StatusCode == 404 {
