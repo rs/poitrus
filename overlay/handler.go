@@ -12,6 +12,7 @@ import (
 func Handler(h http.Handler, origin string) http.Handler {
 	proxy := &httputil.ReverseProxy{
 		Rewrite: func(r *httputil.ProxyRequest) {
+			r.Out.URL.Scheme = "https"
 			r.Out.URL.Host = origin
 			log.Printf("Proxying to %s", r.Out.URL.String())
 		},
