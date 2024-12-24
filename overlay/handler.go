@@ -2,7 +2,7 @@ package overlay
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/http/httputil"
@@ -17,7 +17,7 @@ func Handler(h http.Handler, origin string) http.Handler {
 			if r.StatusCode == 404 {
 				r.Header = http.Header{}
 				r.Body.Close()
-				r.Body = ioutil.NopCloser(&bytes.Buffer{})
+				r.Body = io.NopCloser(&bytes.Buffer{})
 			}
 			return nil
 		},
@@ -39,7 +39,7 @@ func Handler(h http.Handler, origin string) http.Handler {
 			hdr[k] = v
 		}
 		w.WriteHeader(wr.Code)
-		w.Write(wr.Body.Bytes())
+		_, _ = w.Write(wr.Body.Bytes())
 		return
 	})
 }
